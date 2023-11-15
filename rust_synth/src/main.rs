@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use std::time::{Duration, Instant};
 
 use hound;
 
@@ -81,6 +82,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         343.0, 0.025, 0.65, 1.43e-10, 20.0, 10000.0, 5000000.0, 24000.0,
     );
 
+    let start = Instant::now();
     for t in 0..tmax {
         let k1 = ode(
             t, v, &mut pi, &mut pb, &alpha, &beta, gamma, &envelope, c, L, r, Ch, MG, MB, RB, Rh,
@@ -134,6 +136,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         out[t / ovfs] = RB * v[5];
     }
+    let end = start.elapsed();
+    println!("{}.{:03}秒経過しました。", end.as_secs(), end.subsec_nanos() / 1_000_000);
+    println!("{:?}秒の音を生成しました", out.len() as f64 / fs as f64);
+
 
     let max_abs_out: f64 = out.iter().map(|x| x.abs()).fold(f64::NEG_INFINITY, |a, b| a.max(b));
     let mut i16_out: Vec<i16> = vec![0; out.len()];
