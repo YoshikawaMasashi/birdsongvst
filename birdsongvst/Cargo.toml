@@ -1,0 +1,16 @@
+[package]
+name = "birdsongvst"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+vst3-sys = { version = "0.1.0", git = "https://github.com/RustAudio/vst3-sys", rev = "425f386d1f012479fe111b17b6203eab55e5e1db"}
+vst3-com = { version = "0.1.0", git = "https://github.com/RustAudio/vst3-sys", rev = "425f386d1f012479fe111b17b6203eab55e5e1db"}
+
+widestring = "0.4.0"
+
