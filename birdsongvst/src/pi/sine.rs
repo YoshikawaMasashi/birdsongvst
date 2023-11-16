@@ -177,6 +177,7 @@ impl AudioProcessor<f64> for SineOscillator {
 
             self.t += 1;
         }
+        // TODO: ノーマライズ
         RB * self.v[5]
     }
 }
