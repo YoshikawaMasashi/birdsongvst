@@ -8,6 +8,10 @@ fn read_bytes_f64_file(filename: &str) -> Result<Vec<f64>, Box<dyn std::error::E
     let mut file = File::open(filename)?;
     let mut buf: Vec<u8> = Vec::new();
     let _ = file.read_to_end(&mut buf)?;
+    Ok(bytes_to_f64_array(buf))
+}
+
+fn bytes_to_f64_array(buf: Vec<u8>) -> Vec<f64> {
     let float_buf: Vec<f64> = buf
         .chunks(8)
         .map(|chunk| {
@@ -16,7 +20,7 @@ fn read_bytes_f64_file(filename: &str) -> Result<Vec<f64>, Box<dyn std::error::E
             f64::from_le_bytes(bytes_array)
         })
         .collect();
-    Ok(float_buf)
+    float_buf
 }
 
 fn ode(
@@ -61,9 +65,16 @@ fn ode(
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let alpha = read_bytes_f64_file("data/alpha.raw")?;
-    let beta = read_bytes_f64_file("data/beta.raw")?;
-    let envelope = read_bytes_f64_file("data/envelope.raw")?;
+    let alpha_bytes = std::include_bytes!("../data/alpha.raw");
+    let alpha = bytes_to_f64_array(alpha_bytes.to_vec());
+    let beta_bytes = std::include_bytes!("../data/beta.raw");
+    let beta = bytes_to_f64_array(beta_bytes.to_vec());
+    let envelope_bytes = std::include_bytes!("../data/envelope.raw");
+    let envelope = bytes_to_f64_array(envelope_bytes.to_vec());
+
+    // let alpha = read_bytes_f64_file("data/alpha.raw")?;
+    // let beta = read_bytes_f64_file("data/beta.raw")?;
+    // let envelope = read_bytes_f64_file("data/envelope.raw")?;
 
     let fs = 44100;
     let gamma = 40000.0;
